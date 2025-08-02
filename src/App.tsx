@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 const BreathTimer = () => {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const offsetRef = useRef(0);
   const amplitudeRef = useRef(100);
   const speedRef = useRef(2);
@@ -12,35 +12,36 @@ const BreathTimer = () => {
   const frequency = 0.01;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasRef.current 
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
     const ballX = width - 40;
 
     const draw = () => {
-      ctx.clearRect(0, 0, width, height);
+      ctx!.clearRect(0, 0, width, height);
 
       // Draw sine wave up to the ball
-      ctx.beginPath();
+      ctx!.beginPath();
       for (let x = 0; x <= ballX; x++) {
         const y = height / 2 + amplitudeRef.current * Math.sin(frequency * (x + offsetRef.current));
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        if (x === 0) ctx!.moveTo(x, y);
+        else ctx!.lineTo(x, y);
       }
-      ctx.strokeStyle = "#0077ff";
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      ctx!.strokeStyle = "#0077ff";
+      ctx!.lineWidth = 2;
+      ctx!.stroke();
 
       // Draw red leading ball
       const ballY = height / 2 + amplitudeRef.current * Math.sin(frequency * (ballX + offsetRef.current));
-      ctx.beginPath();
-      ctx.arc(ballX, ballY, 16, 0, Math.PI * 2);
-      ctx.fillStyle = "#e60000";
-      ctx.fill();
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = "#990000";
-      ctx.stroke();
+      ctx!.beginPath();
+      ctx!.arc(ballX, ballY, 16, 0, Math.PI * 2);
+      ctx!.fillStyle = "#e60000";
+      ctx!.fill();
+      ctx!.lineWidth = 4;
+      ctx!.strokeStyle = "#990000";
+      ctx!.stroke();
 
       // Update offset
       offsetRef.current += speedRef.current;
@@ -94,7 +95,7 @@ const BreathTimer = () => {
         </button>
       </div>
 
-      
+
       <canvas
         ref={canvasRef}
         width={800}

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 const BreathTimer = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -12,38 +12,64 @@ const BreathTimer = () => {
   const frequency = 0.01;
 
   useEffect(() => {
-    const canvas = canvasRef.current 
+    const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
     const width = canvas.width;
     const height = canvas.height;
     const ballX = width - 40;
 
-    const draw = () => {
-      ctx!.clearRect(0, 0, width, height);
+    let flashTimer = 0;
+    let flashVisible = false;
+    let flashColor = "";
 
-      // Draw sine wave up to the ball
-      ctx!.beginPath();
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw sine wave
+      ctx.beginPath();
       for (let x = 0; x <= ballX; x++) {
         const y = height / 2 + amplitudeRef.current * Math.sin(frequency * (x + offsetRef.current));
-        if (x === 0) ctx!.moveTo(x, y);
-        else ctx!.lineTo(x, y);
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
-      ctx!.strokeStyle = "#0077ff";
-      ctx!.lineWidth = 2;
-      ctx!.stroke();
+      ctx.strokeStyle = "#0077ff";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      const ballY = height / 2 + amplitudeRef.current * Math.sin(frequency * (ballX + offsetRef.current));
 
       // Draw red leading ball
-      const ballY = height / 2 + amplitudeRef.current * Math.sin(frequency * (ballX + offsetRef.current));
-      ctx!.beginPath();
-      ctx!.arc(ballX, ballY, 16, 0, Math.PI * 2);
-      ctx!.fillStyle = "#e60000";
-      ctx!.fill();
-      ctx!.lineWidth = 4;
-      ctx!.strokeStyle = "#990000";
-      ctx!.stroke();
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, 16, 0, Math.PI * 2);
+      ctx.fillStyle = "#e60000";
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "#990000";
+      ctx.stroke();
 
-      // Update offset
+      // Flashing ball at center of red ball
+      if (flashVisible) {
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, 4, 0, Math.PI * 2);
+        ctx.fillStyle = flashColor;
+        ctx.fill();
+      }
+
+      // Occasionally toggle flash
+      flashTimer++;
+      if (flashTimer > 60) { // roughly every 1 second at 60fps
+        flashTimer = 0;
+        flashVisible = true;
+        flashColor = `#fff`;
+        setTimeout(() => {
+          flashVisible = false;
+        }, 150);
+      }
+
       offsetRef.current += speedRef.current;
       requestAnimationFrame(draw);
     };
@@ -58,7 +84,12 @@ const BreathTimer = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full space-y-6">
-
+      <canvas
+        ref={canvasRef}
+        width={800}
+        height={300}
+        className="rounded shadow-lg border"
+      ></canvas>
 
       <div className="w-3/4 max-w-md space-y-4">
         <div className="flex flex-col">
@@ -94,15 +125,6 @@ const BreathTimer = () => {
           Apply Changes
         </button>
       </div>
-
-
-      <canvas
-        ref={canvasRef}
-        width={800}
-        height={300} // Increased height to prevent clipping
-        className="rounded shadow-lg border"
-      ></canvas>
-
     </div>
   );
 };

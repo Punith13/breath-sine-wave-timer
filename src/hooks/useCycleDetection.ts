@@ -13,7 +13,7 @@ export interface CycleDetectionState {
 }
 
 export const useCycleDetection = (config: CycleDetectionConfig): CycleDetectionState => {
-  const { frequency, speedRef, onCycleComplete, canvasWidth = 800 } = config;
+  const { speedRef, onCycleComplete } = config;
   
   // Simple time-based cycle detection
   const startTimeRef = useRef<number>(Date.now());

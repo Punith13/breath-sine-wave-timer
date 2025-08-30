@@ -1,0 +1,219 @@
+/* Mobile-optimized button styles */
+.mobile-button {
+  /* Base button styles */
+  border-radius: var(--border-radius);
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  
+  /* Ensure minimum touch target (48px) */
+  min-height: var(--touch-target-comfortable);
+  min-width: var(--touch-target-comfortable);
+  
+  /* Typography */
+  font-size: var(--font-size-base);
+  line-height: 1.2;
+  
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  
+  /* Prevent layout shift on press */
+  box-sizing: border-box;
+}
+
+/* Size variants */
+.mobile-button--medium {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+}
+
+.mobile-button--large {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  min-height: 56px; /* Larger touch target for primary actions */
+  min-width: 120px; /* Ensure adequate width for comfortable tapping */
+}
+
+/* Primary variant (default) */
+.mobile-button--primary {
+  background-color: #646cff;
+  color: white;
+  border-color: #646cff;
+}
+
+.mobile-button--primary:hover {
+  background-color: #535bf2;
+  border-color: #535bf2;
+}
+
+.mobile-button--primary:focus,
+.mobile-button--primary:focus-visible {
+  outline: 3px solid rgba(100, 108, 255, 0.4);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+/* Secondary variant */
+.mobile-button--secondary {
+  background-color: transparent;
+  color: #646cff;
+  border-color: #646cff;
+}
+
+.mobile-button--secondary:hover {
+  background-color: rgba(100, 108, 255, 0.1);
+}
+
+.mobile-button--secondary:focus,
+.mobile-button--secondary:focus-visible {
+  outline: 3px solid rgba(100, 108, 255, 0.4);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+/* Pressed state for enhanced visual feedback */
+.mobile-button--pressed {
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-button--primary.mobile-button--pressed {
+  background-color: #4c54d9;
+  border-color: #4c54d9;
+}
+
+.mobile-button--secondary.mobile-button--pressed {
+  background-color: rgba(100, 108, 255, 0.2);
+}
+
+/* Disabled state */
+.mobile-button--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.mobile-button--disabled:hover {
+  background-color: inherit;
+  border-color: inherit;
+}
+
+/* Light theme adjustments */
+@media (prefers-color-scheme: light) {
+  .mobile-button--primary {
+    background-color: #646cff;
+    color: white;
+  }
+  
+  .mobile-button--primary:hover {
+    background-color: #535bf2;
+  }
+  
+  .mobile-button--primary.mobile-button--pressed {
+    background-color: #4c54d9;
+  }
+  
+  .mobile-button--secondary {
+    color: #646cff;
+    border-color: #646cff;
+  }
+  
+  .mobile-button--secondary:hover {
+    background-color: rgba(100, 108, 255, 0.1);
+  }
+  
+  .mobile-button--secondary.mobile-button--pressed {
+    background-color: rgba(100, 108, 255, 0.2);
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .mobile-button--secondary {
+    color: #a5b4fc;
+    border-color: #a5b4fc;
+  }
+  
+  .mobile-button--secondary:hover {
+    background-color: rgba(165, 180, 252, 0.1);
+  }
+  
+  .mobile-button--secondary.mobile-button--pressed {
+    background-color: rgba(165, 180, 252, 0.2);
+  }
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .mobile-button--large {
+    min-height: 52px; /* Slightly smaller on tablets */
+    min-width: 140px; /* Slightly wider on tablets */
+    padding: calc(var(--spacing-lg) - 2px) var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-button--large {
+    min-height: 48px; /* Standard desktop size */
+    min-width: 160px; /* Comfortable desktop width */
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+  
+  .mobile-button--medium {
+    min-height: 44px;
+    padding: calc(var(--spacing-md) - 2px) var(--spacing-lg);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mobile-button {
+    border-width: 2px;
+  }
+  
+  .mobile-button--primary {
+    border-color: currentColor;
+  }
+  
+  .mobile-button--secondary {
+    border-color: currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-button {
+    transition: none;
+  }
+  
+  .mobile-button--pressed {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 767px) {
+  .mobile-button--large {
+    /* Ensure comfortable spacing on small screens */
+    margin: var(--spacing-sm) 0;
+    /* Add subtle shadow for depth on mobile */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mobile-button--large:active {
+    /* Enhanced feedback for mobile touch */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}

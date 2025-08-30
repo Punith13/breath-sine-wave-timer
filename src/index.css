@@ -1,12 +1,67 @@
 :root {
+  /* Typography */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
+  
+  /* Color scheme */
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
+  
+  /* Responsive breakpoints */
+  --breakpoint-mobile: 767px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  
+  /* Spacing system (mobile-first) */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-xxl: 3rem;     /* 48px */
+  
+  /* Touch target sizes */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+  
+  /* Font sizes (mobile-first, minimum 16px to prevent zoom) */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-xxl: 1.5rem;   /* 24px */
+  
+  /* Canvas and layout */
+  --canvas-margin: 5%;
+  --canvas-max-width: 95vw;
+  --canvas-max-height: 60vh;
+  --canvas-aspect-ratio: 8/3;
+  
+  /* Layout grid gaps */
+  --layout-gap-mobile: var(--spacing-lg);
+  --layout-gap-tablet: var(--spacing-xl);
+  --layout-gap-desktop: var(--spacing-xxl);
+  
+  /* Animation and interaction */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --border-radius: 8px;
+  
+  /* Safe area insets with fallbacks */
+  --safe-area-inset-top: env(safe-area-inset-top, 0);
+  --safe-area-inset-right: env(safe-area-inset-right, 0);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
+  --safe-area-inset-left: env(safe-area-inset-left, 0);
+  
+  /* Safe area aware spacing */
+  --safe-spacing-top: max(var(--spacing-md), var(--safe-area-inset-top));
+  --safe-spacing-bottom: max(var(--spacing-md), var(--safe-area-inset-bottom));
+  --safe-spacing-left: max(var(--spacing-md), var(--safe-area-inset-left));
+  --safe-spacing-right: max(var(--spacing-md), var(--safe-area-inset-right));
+  
+  /* Rendering optimizations */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -22,12 +77,31 @@ a:hover {
   color: #535bf2;
 }
 
+/* Mobile-first base styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  padding: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  
+  /* Prevent mobile browser behaviors */
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+  
+  /* Safe area support for devices with notches and rounded corners */
+  padding-left: var(--safe-area-inset-left);
+  padding-right: var(--safe-area-inset-right);
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
 }
 
 h1 {
@@ -35,34 +109,227 @@ h1 {
   line-height: 1.1;
 }
 
+/* Touch-friendly button styles */
 button {
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  padding: var(--spacing-md) var(--spacing-lg);
+  min-height: var(--touch-target-comfortable);
+  font-size: var(--font-size-base);
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all var(--transition-normal);
+  
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  
+  /* Ensure minimum touch target */
+  min-width: var(--touch-target-comfortable);
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+button:active {
+  transform: scale(0.98);
+}
+
+/* Touch-friendly input styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: var(--touch-target-min);
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 8px;
+  border-radius: 4px;
+  background: #ddd;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background: #646cff;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: #ddd;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background: #646cff;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Prevent text selection on interactive elements */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Comprehensive mobile browser behavior prevention */
+
+/* Prevent text selection on all interactive elements */
+button,
+input[type="range"],
+canvas,
+.app-container,
+.controls-container,
+.mobile-slider-container,
+.mobile-button {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Prevent callout on touch and hold (iOS Safari) */
+button,
+input[type="range"],
+canvas {
+  -webkit-touch-callout: none;
+}
+
+/* Control touch actions to prevent unwanted gestures */
+button,
+input[type="range"] {
+  touch-action: manipulation; /* Allow only pan and zoom gestures */
+}
+
+canvas {
+  touch-action: none; /* Prevent all default touch behaviors on canvas */
+}
+
+.app-container {
+  touch-action: pan-y; /* Allow vertical scrolling if needed */
+}
+
+/* Prevent bounce scrolling and overscroll behaviors */
+html,
+body {
+  overscroll-behavior: none; /* Prevent bounce scrolling */
+  overscroll-behavior-x: none; /* Prevent horizontal overscroll */
+  overscroll-behavior-y: none; /* Prevent vertical overscroll */
+}
+
+/* Prevent pull-to-refresh on mobile browsers */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Prevent zoom on double-tap (iOS Safari) */
+* {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Prevent selection highlighting on mobile */
+::selection {
+  background: transparent;
+}
+
+::-moz-selection {
+  background: transparent;
+}
+
+/* Prevent drag and drop on interactive elements */
+button,
+input[type="range"],
+canvas {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Responsive typography and layout scaling */
+@media (min-width: 768px) {
+  :root {
+    --font-size-sm: 1rem;      /* 16px */
+    --font-size-base: 1.125rem; /* 18px */
+    --font-size-lg: 1.25rem;   /* 20px */
+    --font-size-xl: 1.5rem;    /* 24px */
+    --font-size-xxl: 2rem;     /* 32px */
+    
+    /* Tablet canvas adjustments */
+    --canvas-max-width: 90vw;
+    --canvas-max-height: 65vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --spacing-md: 1.25rem;     /* 20px */
+    --spacing-lg: 2rem;        /* 32px */
+    --spacing-xl: 2.5rem;      /* 40px */
+    --spacing-xxl: 4rem;       /* 64px */
+    
+    /* Desktop canvas adjustments */
+    --canvas-max-width: 85vw;
+    --canvas-max-height: 70vh;
+  }
+}
+
+/* Light theme adjustments */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
+    --theme-color: #ffffff;
   }
+  
   a:hover {
     color: #747bff;
   }
+  
   button {
     background-color: #f9f9f9;
+  }
+  
+  input[type="range"]::-webkit-slider-track {
+    background: #ccc;
+  }
+  
+  input[type="range"]::-moz-range-track {
+    background: #ccc;
   }
 }

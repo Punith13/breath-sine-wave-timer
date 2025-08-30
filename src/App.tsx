@@ -1,7 +1,7 @@
 import  { useRef, useEffect, useState, useCallback } from "react";
 import { useResponsiveCanvas, useViewport } from "./hooks";
-import { useBreathCounter, useCycleDetection } from "./hooks";
-import { MobileSlider, MobileButton, BreathCounter } from "./components";
+// import { useBreathCounter, useCycleDetection } from "./hooks";
+import { MobileSlider, MobileButton } from "./components";
 import "./components/MobileSlider.css";
 import "./components/MobileButton.css";
 import "./components/BreathCounter.css";
@@ -27,15 +27,15 @@ const BreathTimer = () => {
   const previousOrientationRef = useRef(viewport.orientation);
 
   // Initialize breath counter
-  const breathCounter = useBreathCounter(21);
+  // const breathCounter = useBreathCounter(21);
 
   // Initialize cycle detection with counter integration
-  const cycleDetection = useCycleDetection({
-    frequency,
-    speedRef,
-    onCycleComplete: breathCounter.incrementCounter,
-    canvasWidth: canvasDimensions.displayWidth,
-  });
+  // const cycleDetection = useCycleDetection({
+  //   frequency,
+  //   speedRef,
+  //   onCycleComplete: breathCounter.incrementCounter,
+  //   canvasWidth: canvasDimensions.displayWidth,
+  // });
 
   // Animation function that maintains state across orientation changes
   const startAnimation = useCallback(() => {
@@ -124,7 +124,7 @@ const BreathTimer = () => {
       }
 
       // Update cycle detection
-      cycleDetection.updatePhase();
+      // cycleDetection.updatePhase();
 
       offsetRef.current += speedRef.current;
       animationIdRef.current = requestAnimationFrame(draw);
@@ -132,19 +132,19 @@ const BreathTimer = () => {
 
     // Start the animation and activate counter
     isAnimatingRef.current = true;
-    breathCounter.setActive(true);
+    // breathCounter.setActive(true);
     draw();
-  }, [canvasDimensions, cycleDetection, breathCounter]);
+  }, [canvasDimensions]);
 
   // Stop animation function
   const stopAnimation = useCallback(() => {
     isAnimatingRef.current = false;
-    breathCounter.setActive(false);
+    // breathCounter.setActive(false);
     if (animationIdRef.current) {
       cancelAnimationFrame(animationIdRef.current);
       animationIdRef.current = null;
     }
-  }, [breathCounter]);
+  }, []);
 
   // Handle initial load
   useEffect(() => {
@@ -178,7 +178,7 @@ const BreathTimer = () => {
     stopAnimation();
     
     // Reset cycle detection when canvas dimensions change
-    cycleDetection.resetCycle();
+    // cycleDetection.resetCycle();
     
     // Small delay to ensure DOM has updated after orientation change
     const timeoutId = setTimeout(() => {
@@ -189,7 +189,7 @@ const BreathTimer = () => {
       clearTimeout(timeoutId);
       stopAnimation();
     };
-  }, [canvasDimensions, startAnimation, stopAnimation, cycleDetection]);
+  }, [canvasDimensions, startAnimation, stopAnimation]);
 
   const applyChanges = () => {
     amplitudeRef.current = tempAmplitude;
@@ -197,7 +197,7 @@ const BreathTimer = () => {
     
     // Reset cycle detection when speed changes to maintain timing accuracy
     // Amplitude changes don't affect cycle timing, only speed does
-    cycleDetection.resetCycle();
+    // cycleDetection.resetCycle();
   };
 
   return (
@@ -208,11 +208,11 @@ const BreathTimer = () => {
       ></canvas>
 
       <div className="controls-container">
-        <BreathCounter
+        {/* <BreathCounter
           count={breathCounter.count}
           maxCount={21}
           position="controls"
-        />
+        /> */}
 
         <MobileSlider
           label="Amplitude"

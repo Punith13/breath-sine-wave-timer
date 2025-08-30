@@ -1,0 +1,365 @@
+/* BreathCounter Component Styles */
+
+.breath-counter {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-xs);
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  
+  /* Smooth transitions for count changes and positioning */
+  transition: all var(--transition-normal);
+  
+  /* Prevent mobile browser behaviors */
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Base size variants - Mobile-first approach */
+.breath-counter--small {
+  font-size: var(--font-size-sm);
+  gap: calc(var(--spacing-xs) * 0.75);
+}
+
+.breath-counter--medium {
+  font-size: var(--font-size-base);
+  gap: var(--spacing-xs);
+}
+
+.breath-counter--large {
+  font-size: var(--font-size-lg);
+  gap: var(--spacing-sm);
+}
+
+/* Position variants */
+.breath-counter--overlay {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  z-index: 100;
+  
+  /* Ensure minimum contrast against sine wave */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  
+  /* Default positioning (mobile-first) */
+  top: var(--safe-spacing-top);
+  right: var(--safe-spacing-right);
+  
+  /* Prevent counter from being too close to edges */
+  min-width: 60px;
+  text-align: center;
+}
+
+.breath-counter--controls {
+  position: relative;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+/* Count styling */
+.breath-counter__count {
+  font-weight: 700;
+  color: inherit;
+  font-variant-numeric: tabular-nums; /* Consistent width for numbers */
+}
+
+.breath-counter__max {
+  font-weight: 400;
+  opacity: 0.85;
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mobile-specific positioning and sizing */
+.breath-counter--mobile {
+  /* Enhanced mobile positioning */
+  padding: var(--spacing-sm) var(--spacing-md);
+  min-height: var(--touch-target-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.breath-counter--mobile-portrait {
+  /* Portrait mobile positioning - top right with safe area */
+  top: max(var(--spacing-md), var(--safe-area-inset-top));
+  right: max(var(--spacing-md), var(--safe-area-inset-right));
+  
+  /* Ensure visibility on small screens */
+  font-size: clamp(var(--font-size-sm), 4vw, var(--font-size-base));
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.breath-counter--mobile-landscape {
+  /* Landscape mobile positioning - adjust for limited vertical space */
+  top: max(var(--spacing-sm), var(--safe-area-inset-top));
+  right: max(var(--spacing-sm), var(--safe-area-inset-right));
+  
+  /* Compact sizing for landscape */
+  font-size: var(--font-size-sm);
+  padding: calc(var(--spacing-xs) * 0.75) var(--spacing-sm);
+  gap: calc(var(--spacing-xs) * 0.5);
+  
+  /* Ensure it doesn't interfere with controls in landscape grid layout */
+  z-index: 150;
+}
+
+/* Tablet-specific positioning */
+.breath-counter--tablet {
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+/* Desktop-specific positioning */
+.breath-counter--desktop {
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+  font-size: var(--font-size-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+/* Enhanced contrast and visibility */
+.breath-counter--overlay {
+  /* Improved background for better contrast */
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  
+  /* Enhanced border for definition */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  /* Stronger text shadow for readability */
+  text-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.9),
+    0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Light theme adjustments with enhanced contrast */
+@media (prefers-color-scheme: light) {
+  .breath-counter--overlay {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+    color: #1a1a1a;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 
+      0 2px 12px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+    text-shadow: 
+      0 1px 1px rgba(255, 255, 255, 0.8),
+      0 0 2px rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* Responsive font scaling for different screen sizes */
+@media (max-width: 480px) {
+  .breath-counter--small {
+    font-size: clamp(0.75rem, 3.5vw, var(--font-size-sm));
+  }
+  
+  .breath-counter--medium {
+    font-size: clamp(0.875rem, 4vw, var(--font-size-base));
+  }
+  
+  .breath-counter--large {
+    font-size: clamp(1rem, 4.5vw, var(--font-size-lg));
+  }
+  
+  .breath-counter--mobile-portrait {
+    /* Extra compact for very small screens */
+    padding: calc(var(--spacing-xs) * 0.75) var(--spacing-xs);
+    min-width: 50px;
+  }
+}
+
+/* Tablet responsive adjustments */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .breath-counter--small {
+    font-size: var(--font-size-base);
+  }
+  
+  .breath-counter--medium {
+    font-size: var(--font-size-lg);
+  }
+  
+  .breath-counter--large {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* Desktop responsive adjustments */
+@media (min-width: 1024px) {
+  .breath-counter--small {
+    font-size: var(--font-size-lg);
+  }
+  
+  .breath-counter--medium {
+    font-size: var(--font-size-xl);
+  }
+  
+  .breath-counter--large {
+    font-size: var(--font-size-xxl);
+  }
+}
+
+/* Orientation change handling */
+@media (orientation: landscape) and (max-height: 500px) {
+  .breath-counter--overlay {
+    /* Compact positioning for short landscape screens */
+    top: var(--spacing-xs);
+    right: var(--spacing-sm);
+    padding: calc(var(--spacing-xs) * 0.5) var(--spacing-xs);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Very wide screens (ultra-wide monitors, unfolded foldables) */
+@media (min-aspect-ratio: 2/1) {
+  .breath-counter--overlay {
+    /* Adjust positioning for ultra-wide displays */
+    right: max(var(--spacing-xl), calc((100vw - 1400px) / 2 + var(--spacing-lg)));
+  }
+}
+
+/* Very tall screens (folded phones, narrow windows) */
+@media (max-aspect-ratio: 1/2) {
+  .breath-counter--overlay {
+    /* Optimize for very tall displays */
+    top: max(var(--spacing-lg), var(--safe-area-inset-top));
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .breath-counter--overlay {
+    background-color: rgba(0, 0, 0, 0.95) !important;
+    color: white !important;
+    border: 2px solid white !important;
+    text-shadow: none !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .breath-counter--overlay {
+      background-color: rgba(255, 255, 255, 0.98) !important;
+      color: black !important;
+      border: 2px solid black !important;
+    }
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .breath-counter {
+    transition: none;
+  }
+}
+
+/* Focus styles for accessibility */
+.breath-counter:focus-visible {
+  outline: 3px solid #646cff;
+  outline-offset: 2px;
+}
+
+/* Hover effects for desktop */
+@media (hover: hover) and (pointer: fine) {
+  .breath-counter--overlay:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.95) 0%,
+      rgba(0, 0, 0, 0.85) 100%
+    );
+    transform: scale(1.02);
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .breath-counter--overlay:hover {
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(255, 255, 255, 0.93) 100%
+      );
+    }
+  }
+}
+
+/* Prevent interactions on touch devices to avoid conflicts */
+@media (pointer: coarse) {
+  .breath-counter--overlay {
+    pointer-events: none;
+  }
+}
+
+/* Smooth transitions for orientation changes */
+.breath-counter--overlay {
+  transition: 
+    top var(--transition-normal),
+    right var(--transition-normal),
+    font-size var(--transition-normal),
+    padding var(--transition-normal),
+    transform var(--transition-fast);
+}
+
+/* Prevent transitions during initial load or rapid orientation changes */
+.breath-counter[data-viewport-width="0"],
+.breath-counter[data-viewport-height="0"] {
+  transition: none !important;
+}
+
+/* Ensure proper stacking above canvas and controls */
+.breath-counter--overlay {
+  z-index: 100;
+  position: absolute;
+}
+
+/* Special handling for devices with rounded corners */
+@supports (border-radius: env(display-p3)) {
+  .breath-counter--overlay {
+    /* Ensure counter doesn't get clipped by rounded display corners */
+    margin-top: max(0px, env(safe-area-inset-top, 0));
+    margin-right: max(0px, env(safe-area-inset-right, 0));
+  }
+}
+
+/* Print styles (hide overlay counter in print) */
+@media print {
+  .breath-counter--overlay {
+    display: none;
+  }
+}

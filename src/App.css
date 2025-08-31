@@ -14,20 +14,23 @@
 .app-container {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  grid-template-areas: 
+  grid-template-areas:
     "counter"
     "canvas"
     "controls";
   align-items: center;
   justify-items: center;
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  min-height: 100dvh;
+  /* Dynamic viewport height for mobile */
   width: 100%;
-  max-width: 1200px; /* Constrain maximum width for better centering */
-  margin: 0 auto; /* Center the entire container */
+  max-width: 1200px;
+  /* Constrain maximum width for better centering */
+  margin: 0 auto;
+  /* Center the entire container */
   gap: var(--spacing-lg);
   padding: var(--spacing-md);
-  
+
   /* Ensure proper spacing on mobile with safe area support */
   padding-top: var(--safe-spacing-top);
   padding-bottom: var(--safe-spacing-bottom);
@@ -39,7 +42,8 @@
 .app-container .breath-counter {
   grid-area: counter;
   width: 100%;
-  max-width: 800px; /* Match canvas max width */
+  max-width: 800px;
+  /* Match canvas max width */
   justify-self: center;
   text-align: center;
 }
@@ -48,11 +52,13 @@
 .app-container canvas {
   grid-area: canvas;
   width: 100%;
-  max-width: 800px; /* Set a consistent max width for centering */
+  max-width: 800px;
+  /* Set a consistent max width for centering */
   height: auto;
   border-radius: var(--border-radius);
-  justify-self: center; /* Ensure canvas is centered */
-  
+  justify-self: center;
+  /* Ensure canvas is centered */
+
   /* Prevent mobile browser behaviors on canvas */
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -60,11 +66,11 @@
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
-  
+
   /* Prevent context menu on long press */
   -webkit-context-menu: none;
   context-menu: none;
-  
+
   /* Prevent image saving gestures */
   -webkit-user-drag: none;
   -khtml-user-drag: none;
@@ -72,50 +78,102 @@
   user-drag: none;
 }
 
-/* Mobile-friendly controls container */
-.controls-container {
+/* Controls section wrapper */
+.controls-section {
   grid-area: controls;
   width: 100%;
-  max-width: 500px; /* Slightly wider for better balance */
+  max-width: 500px;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-sm) var(--spacing-md);
-  justify-self: center; /* Center the controls */
-  
+  align-items: center;
+  gap: var(--spacing-md);
+  justify-self: center;
+
   /* Ensure controls don't get too close to screen edges */
   margin-left: var(--spacing-sm);
   margin-right: var(--spacing-sm);
-  
+}
+
+/* Controls toggle button */
+.controls-toggle {
+  font-size: var(--font-size-sm) !important;
+  padding: var(--spacing-sm) var(--spacing-lg) !important;
+  min-height: 40px !important;
+  border-radius: 20px !important;
+  transition: all var(--transition-normal);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.controls-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile-friendly controls container */
+.controls-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-md);
+
   /* Prevent unwanted mobile behaviors on controls */
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
   touch-action: manipulation;
-  
+
   /* Prevent overscroll within controls */
   overscroll-behavior: contain;
 }
+
+/* Ensure all direct children are centered */
+.controls-container > * {
+  align-self: center;
+}
+
+/* Button wrapper to ensure proper centering */
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Controls visibility is now handled by conditional rendering in React */
+
+/* All controls are now centered using flexbox in .controls-container */
 
 /* Tablet adjustments (768px and up) */
 @media (min-width: 768px) {
   .app-container {
     gap: var(--spacing-xl);
     padding: var(--spacing-lg);
-    max-width: 1000px; /* Slightly smaller for tablets */
+    max-width: 1000px;
+    /* Slightly smaller for tablets */
   }
-  
+
   .app-container canvas {
-    max-width: 700px; /* Responsive canvas size for tablets */
+    max-width: 700px;
+    /* Responsive canvas size for tablets */
   }
-  
-  .controls-container {
+
+  .controls-section {
     max-width: 600px;
-    gap: var(--spacing-xl);
-    padding: var(--spacing-md) var(--spacing-lg);
     margin-left: var(--spacing-md);
     margin-right: var(--spacing-md);
+  }
+
+  .controls-container {
+    gap: var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .controls-visible {
+    padding: var(--spacing-xl) var(--spacing-lg);
   }
 }
 
@@ -124,15 +182,20 @@
   .app-container {
     gap: var(--spacing-xxl);
     padding: var(--spacing-xl);
-    max-width: 1200px; /* Full desktop width */
+    max-width: 1200px;
+    /* Full desktop width */
   }
-  
+
   .app-container canvas {
-    max-width: 800px; /* Optimal canvas size for desktop */
+    max-width: 800px;
+    /* Optimal canvas size for desktop */
   }
-  
-  .controls-container {
+
+  .controls-section {
     max-width: 700px;
+  }
+
+  .controls-container {
     gap: var(--spacing-xxl);
   }
 }
@@ -140,15 +203,17 @@
 /* Large desktop adjustments (1280px and up) */
 @media (min-width: 1280px) {
   .app-container {
-    max-width: 1400px; /* Slightly wider for large screens */
+    max-width: 1400px;
+    /* Slightly wider for large screens */
     padding: calc(var(--spacing-xl) * 1.5);
   }
-  
+
   .app-container canvas {
-    max-width: 900px; /* Larger canvas for big screens */
+    max-width: 900px;
+    /* Larger canvas for big screens */
   }
-  
-  .controls-container {
+
+  .controls-section {
     max-width: 800px;
   }
 }
@@ -159,9 +224,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -170,6 +237,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -188,6 +256,7 @@
 .read-the-docs {
   color: #888;
 }
+
 /* Landscape orientation handling for mobile devices */
 @media (max-width: 767px) and (orientation: landscape) {
   .app-container {
@@ -196,15 +265,16 @@
     grid-template-areas: "counter canvas controls";
     gap: var(--spacing-md);
     padding: var(--spacing-sm);
-    max-width: 100vw; /* Full width in landscape */
-    
+    max-width: 100vw;
+    /* Full width in landscape */
+
     /* Adjust for landscape safe areas */
     padding-left: max(var(--spacing-sm), var(--safe-area-inset-left));
     padding-right: max(var(--spacing-sm), var(--safe-area-inset-right));
     padding-top: max(var(--spacing-xs), var(--safe-area-inset-top));
     padding-bottom: max(var(--spacing-xs), var(--safe-area-inset-bottom));
   }
-  
+
   .app-container .breath-counter {
     grid-area: counter;
     writing-mode: vertical-rl;
@@ -215,15 +285,16 @@
     height: auto;
     max-width: none;
   }
-  
+
   .app-container canvas {
     width: auto;
     height: 100%;
     max-height: calc(100vh - var(--spacing-md));
     max-height: calc(100dvh - var(--spacing-md));
-    max-width: none; /* Allow canvas to be flexible in landscape */
+    max-width: none;
+    /* Allow canvas to be flexible in landscape */
   }
-  
+
   .controls-container {
     width: auto;
     min-width: 200px;
@@ -243,9 +314,10 @@
     grid-template-rows: 1fr;
     grid-template-areas: "counter canvas controls";
     gap: var(--spacing-lg);
-    max-width: 100vw; /* Full width for tablet landscape */
+    max-width: 100vw;
+    /* Full width for tablet landscape */
   }
-  
+
   .app-container .breath-counter {
     grid-area: counter;
     writing-mode: vertical-rl;
@@ -256,11 +328,12 @@
     height: auto;
     max-width: none;
   }
-  
+
   .app-container canvas {
-    max-width: none; /* Allow canvas to be flexible in tablet landscape */
+    max-width: none;
+    /* Allow canvas to be flexible in tablet landscape */
   }
-  
+
   .controls-container {
     min-width: 280px;
     max-width: 320px;
@@ -275,7 +348,7 @@
     gap: var(--spacing-md);
     padding: var(--spacing-sm);
   }
-  
+
   .controls-container {
     max-width: 100%;
     gap: var(--spacing-md);
@@ -289,7 +362,7 @@
     gap: var(--spacing-sm);
     padding: var(--spacing-xs);
   }
-  
+
   .controls-container {
     min-width: 180px;
     max-width: 200px;
@@ -301,24 +374,24 @@
 /* Smooth transitions for orientation changes */
 .app-container {
   transition: grid-template-columns var(--transition-normal),
-              grid-template-rows var(--transition-normal),
-              gap var(--transition-normal),
-              padding var(--transition-normal);
+    grid-template-rows var(--transition-normal),
+    gap var(--transition-normal),
+    padding var(--transition-normal);
 }
 
 .app-container canvas {
   transition: width var(--transition-normal),
-              height var(--transition-normal),
-              max-width var(--transition-normal),
-              max-height var(--transition-normal);
+    height var(--transition-normal),
+    max-width var(--transition-normal),
+    max-height var(--transition-normal);
 }
 
 .controls-container {
   transition: width var(--transition-normal),
-              max-width var(--transition-normal),
-              min-width var(--transition-normal),
-              gap var(--transition-normal),
-              padding var(--transition-normal);
+    max-width var(--transition-normal),
+    min-width var(--transition-normal),
+    gap var(--transition-normal),
+    padding var(--transition-normal);
 }
 
 /* Prevent transitions during initial load */
@@ -348,7 +421,7 @@
     pointer-events: none;
     z-index: 1000;
   }
-  
+
   /* Show indicator briefly during orientation changes */
   .app-container.orientation-changing::before {
     opacity: 1;
@@ -441,7 +514,7 @@
   html {
     overscroll-behavior-y: none;
   }
-  
+
   body {
     overscroll-behavior-y: none;
     /* Prevent pull-to-refresh */
@@ -460,7 +533,8 @@
 /* Prevent zoom on input focus (iOS Safari) */
 @media (max-width: 767px) {
   input[type="range"] {
-    font-size: 16px; /* Prevent zoom on focus */
+    font-size: 16px;
+    /* Prevent zoom on focus */
   }
 }
 
@@ -481,7 +555,7 @@ canvas {
   -moz-user-drag: none;
   -o-user-drag: none;
   user-drag: none;
-  
+
   /* Prevent right-click context menu */
   -webkit-context-menu: none;
   context-menu: none;
@@ -497,12 +571,13 @@ button {
 
 /* Specific iOS Safari fixes */
 @supports (-webkit-appearance: none) {
+
   /* Prevent iOS Safari from adding rounded corners to inputs */
   input[type="range"] {
     -webkit-appearance: none;
     border-radius: 0;
   }
-  
+
   /* Prevent iOS Safari button styling */
   button {
     -webkit-appearance: none;

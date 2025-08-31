@@ -18,6 +18,7 @@ const BreathTimer = () => {
   const [tempSpeed, setTempSpeed] = useState(2);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isOrientationChanging, setIsOrientationChanging] = useState(false);
+  const [showControls, setShowControls] = useState(true);
 
   const frequency = 0.01;
 
@@ -213,32 +214,47 @@ const BreathTimer = () => {
         className="rounded shadow-lg border"
       ></canvas>
 
-      <div className="controls-container">
-        <MobileSlider
-          label="Amplitude"
-          value={tempAmplitude}
-          min={50}
-          max={150}
-          step={1}
-          onChange={setTempAmplitude}
-        />
-
-        <MobileSlider
-          label="Speed"
-          value={tempSpeed}
-          min={0}
-          max={3}
-          step={0.1}
-          onChange={setTempSpeed}
-        />
-
+      <div className="controls-section">
         <MobileButton
-          onClick={applyChanges}
-          variant="primary"
-          size="large"
+          onClick={() => setShowControls(!showControls)}
+          variant="secondary"
+          size="medium"
+          className="controls-toggle"
         >
-          Apply Changes
+          {showControls ? '▼ Hide Controls' : '▲ Show Controls'}
         </MobileButton>
+        
+        {showControls && (
+          <div className="controls-container">
+            <MobileSlider
+              label="Amplitude"
+              value={tempAmplitude}
+              min={50}
+              max={150}
+              step={1}
+              onChange={setTempAmplitude}
+            />
+
+            <MobileSlider
+              label="Speed"
+              value={tempSpeed}
+              min={0}
+              max={3}
+              step={0.1}
+              onChange={setTempSpeed}
+            />
+
+            <div className="button-wrapper">
+              <MobileButton
+                onClick={applyChanges}
+                variant="primary"
+                size="large"
+              >
+                Apply Changes
+              </MobileButton>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

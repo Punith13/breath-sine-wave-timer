@@ -36,7 +36,7 @@ describe('useCycleDetection Integration', () => {
       // Simulate time passing for multiple cycles
       act(() => {
         vi.advanceTimersByTime(5000); // 5 seconds
-        cycleResult.current.updatePhase();
+        cycleResult.current.updatePhase(1000); // Pass a sample offset
       });
 
       // Should have detected at least one complete cycle
@@ -60,7 +60,7 @@ describe('useCycleDetection Integration', () => {
       // Start with normal speed
       act(() => {
         vi.advanceTimersByTime(1000);
-        result.current.updatePhase();
+        result.current.updatePhase(500); // Pass a sample offset
       });
 
       // Change speed mid-animation
@@ -68,7 +68,7 @@ describe('useCycleDetection Integration', () => {
       
       act(() => {
         vi.advanceTimersByTime(1000);
-        result.current.updatePhase();
+        result.current.updatePhase(1000); // Pass a sample offset
       });
 
       // Should handle speed changes gracefully
@@ -93,7 +93,7 @@ describe('useCycleDetection Integration', () => {
       // Advance time partially
       act(() => {
         vi.advanceTimersByTime(1000);
-        result.current.updatePhase();
+        result.current.updatePhase(300); // Pass a sample offset
       });
 
       // Change canvas width (simulating orientation change)
@@ -107,7 +107,7 @@ describe('useCycleDetection Integration', () => {
       // Continue animation with new dimensions
       act(() => {
         vi.advanceTimersByTime(2000);
-        result.current.updatePhase();
+        result.current.updatePhase(800); // Pass a sample offset
       });
 
       expect(mockOnCycleComplete).toHaveBeenCalled();

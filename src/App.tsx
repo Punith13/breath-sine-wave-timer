@@ -202,18 +202,18 @@ const BreathTimer = () => {
 
   return (
     <div className={`app-container ${isInitialLoad ? 'no-transition' : ''} ${isOrientationChanging ? 'orientation-changing' : ''}`}>
+      <BreathCounter
+        count={breathCounter.count}
+        maxCount={21}
+        position="above-canvas"
+      />
+      
       <canvas
         ref={canvasRef}
         className="rounded shadow-lg border"
       ></canvas>
 
       <div className="controls-container">
-        <BreathCounter
-          count={breathCounter.count}
-          maxCount={21}
-          position="controls"
-        />
-
         <MobileSlider
           label="Amplitude"
           value={tempAmplitude}

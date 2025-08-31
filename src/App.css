@@ -8,8 +8,9 @@
 /* Main app container - Mobile-first responsive layout */
 .app-container {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   grid-template-areas: 
+    "counter"
     "canvas"
     "controls";
   align-items: center;
@@ -25,6 +26,14 @@
   padding-bottom: var(--safe-spacing-bottom);
   padding-left: var(--safe-spacing-left);
   padding-right: var(--safe-spacing-right);
+}
+
+/* Counter container for grid positioning */
+.app-container .breath-counter {
+  grid-area: counter;
+  width: 100%;
+  justify-self: center;
+  text-align: center;
 }
 
 /* Canvas container for grid positioning */
@@ -155,9 +164,9 @@
 /* Landscape orientation handling for mobile devices */
 @media (max-width: 767px) and (orientation: landscape) {
   .app-container {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     grid-template-rows: 1fr;
-    grid-template-areas: "canvas controls";
+    grid-template-areas: "counter canvas controls";
     gap: var(--spacing-md);
     padding: var(--spacing-sm);
     
@@ -166,6 +175,16 @@
     padding-right: max(var(--spacing-sm), var(--safe-area-inset-right));
     padding-top: max(var(--spacing-xs), var(--safe-area-inset-top));
     padding-bottom: max(var(--spacing-xs), var(--safe-area-inset-bottom));
+  }
+  
+  .app-container .breath-counter {
+    grid-area: counter;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    justify-self: center;
+    align-self: center;
+    width: auto;
+    height: auto;
   }
   
   .app-container canvas {
@@ -190,10 +209,20 @@
 /* Tablet landscape adjustments */
 @media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
   .app-container {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     grid-template-rows: 1fr;
-    grid-template-areas: "canvas controls";
+    grid-template-areas: "counter canvas controls";
     gap: var(--spacing-lg);
+  }
+  
+  .app-container .breath-counter {
+    grid-area: counter;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    justify-self: center;
+    align-self: center;
+    width: auto;
+    height: auto;
   }
   
   .controls-container {

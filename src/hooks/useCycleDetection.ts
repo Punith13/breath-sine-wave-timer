@@ -13,7 +13,7 @@ export interface CycleDetectionState {
 }
 
 export const useCycleDetection = (config: CycleDetectionConfig): CycleDetectionState => {
-  const { frequency, speedRef, onCycleComplete, canvasWidth = 800 } = config;
+  const { frequency, onCycleComplete, canvasWidth = 800 } = config;
   
   // Track the last offset where we detected a cycle
   const lastCycleOffsetRef = useRef<number>(0);

@@ -34,7 +34,7 @@
   - Maintain counter timing accuracy when amplitude or speed controls are adjusted
   - _Requirements: 1.2, 1.4, 1.5, 4.1, 4.3, 5.3_
 
-- [ ] 6. Add counter display to main application
+- [x] 6. Add counter display to main application
   - Integrate BreathCounter component into existing App.tsx layout
   - Position counter appropriately within existing responsive grid system
   - Ensure counter doesn't interfere with existing controls or canvas

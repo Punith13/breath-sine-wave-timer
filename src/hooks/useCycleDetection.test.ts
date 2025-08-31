@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { useCycleDetection } from './useCycleDetection';
 import type { CycleDetectionConfig } from './useCycleDetection';
 
@@ -10,11 +10,6 @@ describe('useCycleDetection', () => {
   beforeEach(() => {
     mockOnCycleComplete = vi.fn();
     speedRef = { current: 2 };
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   const createConfig = (overrides: Partial<CycleDetectionConfig> = {}): CycleDetectionConfig => ({
@@ -35,71 +30,101 @@ describe('useCycleDetection', () => {
     });
   });
 
-  describe('time-based cycle detection', () => {
-    it('should call onCycleComplete after sufficient time has passed', () => {
+  describe('offset-based cycle detection', () => {
+    it('should call onCycleComplete when offset advances by one complete cycle', () => {
       const config = createConfig();
       const { result } = renderHook(() => useCycleDetection(config));
 
-      // Simulate time passing for one complete cycle
+      // Calculate expected offset per cycle: 2π / scaledFrequency
+      const scaledFrequency = config.frequency * (800 / config.canvasWidth!); // 0.01
+      const offsetPerCycle = (2 * Math.PI) / scaledFrequency; // ~628.32
+
+      // Simulate offset advancing by one complete cycle
       act(() => {
-        vi.advanceTimersByTime(2000); // Advance by 2 seconds
-        result.current.updatePhase();
+        result.current.updatePhase(offsetPerCycle);
       });
 
-      expect(mockOnCycleComplete).toHaveBeenCalled();
+      expect(mockOnCycleComplete).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call onCycleComplete before sufficient time has passed', () => {
+    it('should call onCycleComplete multiple times for multiple cycles', () => {
       const config = createConfig();
       const { result } = renderHook(() => useCycleDetection(config));
 
-      // Simulate short time passing
+      const scaledFrequency = config.frequency * (800 / config.canvasWidth!);
+      const offsetPerCycle = (2 * Math.PI) / scaledFrequency;
+
+      // Simulate offset advancing by 2.5 complete cycles
       act(() => {
-        vi.advanceTimersByTime(100); // Advance by 100ms
-        result.current.updatePhase();
+        result.current.updatePhase(offsetPerCycle * 2.5);
+      });
+
+      // Should call onCycleComplete twice (for 2 complete cycles)
+      expect(mockOnCycleComplete).toHaveBeenCalledTimes(2);
+    });
+
+    it('should adjust cycle detection for different canvas widths', () => {
+      const config = createConfig({ canvasWidth: 400 }); // Half the default width
+      const { result } = renderHook(() => useCycleDetection(config));
+
+      // With half the canvas width, scaledFrequency doubles, so offsetPerCycle halves
+      const scaledFrequency = config.frequency * (800 / config.canvasWidth!); // 0.02
+      const offsetPerCycle = (2 * Math.PI) / scaledFrequency; // ~314.16
+
+      act(() => {
+        result.current.updatePhase(offsetPerCycle);
+      });
+
+      expect(mockOnCycleComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('should reset cycle tracking when resetCycle is called', () => {
+      const config = createConfig();
+      const { result } = renderHook(() => useCycleDetection(config));
+
+      const scaledFrequency = config.frequency * (800 / config.canvasWidth!);
+      const offsetPerCycle = (2 * Math.PI) / scaledFrequency;
+
+      // Advance by partial cycle
+      act(() => {
+        result.current.updatePhase(offsetPerCycle * 0.5);
       });
 
       expect(mockOnCycleComplete).not.toHaveBeenCalled();
-    });
 
-    it('should reset cycle timing when resetCycle is called', () => {
-      const config = createConfig();
-      const { result } = renderHook(() => useCycleDetection(config));
-
-      // Advance time partially
-      act(() => {
-        vi.advanceTimersByTime(1000);
-        result.current.updatePhase();
-      });
-
-      // Reset cycle
+      // Reset cycle detection
       act(() => {
         result.current.resetCycle();
       });
 
-      // Advance time again (should not trigger cycle complete yet)
+      // Advance by another partial cycle (should not complete yet)
       act(() => {
-        vi.advanceTimersByTime(1000);
-        result.current.updatePhase();
+        result.current.updatePhase(offsetPerCycle * 0.5);
       });
 
       expect(mockOnCycleComplete).not.toHaveBeenCalled();
-    });
-  });
 
-  describe('different speeds', () => {
-    it('should adjust cycle timing based on speed', () => {
-      speedRef.current = 4; // Double the speed
+      // Advance by full cycle from current position
+      act(() => {
+        result.current.updatePhase(offsetPerCycle * 1.5);
+      });
+
+      expect(mockOnCycleComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call onCycleComplete for partial cycles', () => {
       const config = createConfig();
       const { result } = renderHook(() => useCycleDetection(config));
 
-      // At double speed, cycles should complete faster
+      const scaledFrequency = config.frequency * (800 / config.canvasWidth!);
+      const offsetPerCycle = (2 * Math.PI) / scaledFrequency;
+
+      // Advance by 90% of a cycle
       act(() => {
-        vi.advanceTimersByTime(1000); // Less time needed
-        result.current.updatePhase();
+        result.current.updatePhase(offsetPerCycle * 0.9);
       });
 
-      expect(mockOnCycleComplete).toHaveBeenCalled();
+      expect(mockOnCycleComplete).not.toHaveBeenCalled();
     });
   });
 });

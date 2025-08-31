@@ -9,42 +9,45 @@ export interface CycleDetectionConfig {
 
 export interface CycleDetectionState {
   resetCycle: () => void;
-  updatePhase: () => void;
+  updatePhase: (currentOffset: number) => void;
 }
 
 export const useCycleDetection = (config: CycleDetectionConfig): CycleDetectionState => {
-  const { speedRef, onCycleComplete } = config;
+  const { frequency, speedRef, onCycleComplete, canvasWidth = 800 } = config;
   
-  // Simple time-based cycle detection
-  const startTimeRef = useRef<number>(Date.now());
-  const lastCycleTimeRef = useRef<number>(Date.now());
+  // Track the last offset where we detected a cycle
+  const lastCycleOffsetRef = useRef<number>(0);
   
-  // Calculate cycle duration based on speed
-  // Simple approach: base cycle time divided by speed
-  const getCycleDuration = useCallback(() => {
-    const speed = speedRef.current || 1;
-    // Base cycle duration in milliseconds (adjustable)
-    const baseCycleDuration = 3000; // 3 seconds at speed 1
-    return baseCycleDuration / speed;
-  }, [speedRef]);
+  // Calculate how much offset represents one complete cycle
+  const getOffsetPerCycle = useCallback(() => {
+    const scaledFrequency = frequency * (800 / canvasWidth);
+    return (2 * Math.PI) / scaledFrequency;
+  }, [frequency, canvasWidth]);
   
-  // Simple update function that just checks elapsed time
-  const updatePhase = useCallback(() => {
-    const currentTime = Date.now();
-    const cycleDuration = getCycleDuration();
+  // Update function that checks if we've completed a full sine wave cycle
+  const updatePhase = useCallback((currentOffset: number) => {
+    const offsetPerCycle = getOffsetPerCycle();
     
-    // Check if enough time has passed for a complete cycle
-    if (currentTime - lastCycleTimeRef.current >= cycleDuration) {
-      onCycleComplete();
-      lastCycleTimeRef.current = currentTime;
+    // Calculate how many complete cycles have passed since the last detected cycle
+    const offsetSinceLastCycle = currentOffset - lastCycleOffsetRef.current;
+    
+    if (offsetSinceLastCycle >= offsetPerCycle) {
+      // We've completed at least one full cycle
+      const completedCycles = Math.floor(offsetSinceLastCycle / offsetPerCycle);
+      
+      // Call onCycleComplete for each completed cycle
+      for (let i = 0; i < completedCycles; i++) {
+        onCycleComplete();
+      }
+      
+      // Update the last cycle offset to account for all completed cycles
+      lastCycleOffsetRef.current += completedCycles * offsetPerCycle;
     }
-  }, [getCycleDuration, onCycleComplete]);
+  }, [getOffsetPerCycle, onCycleComplete]);
   
   // Reset cycle detection state
   const resetCycle = useCallback(() => {
-    const currentTime = Date.now();
-    startTimeRef.current = currentTime;
-    lastCycleTimeRef.current = currentTime;
+    lastCycleOffsetRef.current = 0;
   }, []);
   
   return {

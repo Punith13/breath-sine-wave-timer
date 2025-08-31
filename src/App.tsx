@@ -1,7 +1,7 @@
-import  { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { useResponsiveCanvas, useViewport } from "./hooks";
-// import { useBreathCounter, useCycleDetection } from "./hooks";
-import { MobileSlider, MobileButton } from "./components";
+import { useBreathCounter, useCycleDetection } from "./hooks";
+import { MobileSlider, MobileButton, BreathCounter } from "./components";
 import "./components/MobileSlider.css";
 import "./components/MobileButton.css";
 import "./components/BreathCounter.css";
@@ -20,22 +20,22 @@ const BreathTimer = () => {
   const [isOrientationChanging, setIsOrientationChanging] = useState(false);
 
   const frequency = 0.01;
-  
+
   // Get responsive canvas dimensions and viewport state
   const canvasDimensions = useResponsiveCanvas();
   const viewport = useViewport();
   const previousOrientationRef = useRef(viewport.orientation);
 
   // Initialize breath counter
-  // const breathCounter = useBreathCounter(21);
+  const breathCounter = useBreathCounter(21);
 
   // Initialize cycle detection with counter integration
-  // const cycleDetection = useCycleDetection({
-  //   frequency,
-  //   speedRef,
-  //   onCycleComplete: breathCounter.incrementCounter,
-  //   canvasWidth: canvasDimensions.displayWidth,
-  // });
+  const cycleDetection = useCycleDetection({
+    frequency,
+    speedRef,
+    onCycleComplete: breathCounter.incrementCounter,
+    canvasWidth: canvasDimensions.displayWidth,
+  });
 
   // Animation function that maintains state across orientation changes
   const startAnimation = useCallback(() => {
@@ -48,20 +48,20 @@ const BreathTimer = () => {
     // Set canvas physical dimensions for crisp rendering
     canvas.width = canvasDimensions.width;
     canvas.height = canvasDimensions.height;
-    
+
     // Set canvas display dimensions
     canvas.style.width = `${canvasDimensions.displayWidth}px`;
     canvas.style.height = `${canvasDimensions.displayHeight}px`;
-    
+
     // Scale context for device pixel ratio
     ctx.scale(canvasDimensions.scaleFactor, canvasDimensions.scaleFactor);
 
     const width = canvasDimensions.displayWidth;
     const height = canvasDimensions.displayHeight;
-    
+
     // Calculate scaling factors based on original 800x300 canvas
     const heightScale = height / 300;
-    
+
     // Scale ball position and size proportionally to canvas dimensions
     const ballRadius = Math.max(6, Math.min(width * 0.02, height * 0.05)); // Responsive to both width and height
     const ballX = width - (ballRadius * 2.5); // Position ball with proportional margin
@@ -78,7 +78,7 @@ const BreathTimer = () => {
 
       // Scale amplitude proportionally to canvas height while respecting user setting
       const scaledAmplitude = amplitudeRef.current * heightScale;
-      
+
       // Draw sine wave with scaled frequency to maintain wave count across different widths
       const scaledFrequency = frequency * (800 / width); // Maintain consistent wave frequency
       ctx.beginPath();
@@ -113,7 +113,7 @@ const BreathTimer = () => {
       // Occasionally toggle flash - use time-based instead of frame-based for consistency
       const currentTime = Date.now();
       if (!lastFlashTime) lastFlashTime = currentTime;
-      
+
       if (currentTime - lastFlashTime > 1000) { // Flash every 1 second
         lastFlashTime = currentTime;
         flashVisible = true;
@@ -123,8 +123,8 @@ const BreathTimer = () => {
         }, 150);
       }
 
-      // Update cycle detection
-      // cycleDetection.updatePhase();
+      // Update cycle detection with current offset
+      cycleDetection.updatePhase(offsetRef.current);
 
       offsetRef.current += speedRef.current;
       animationIdRef.current = requestAnimationFrame(draw);
@@ -132,7 +132,7 @@ const BreathTimer = () => {
 
     // Start the animation and activate counter
     isAnimatingRef.current = true;
-    // breathCounter.setActive(true);
+    breathCounter.setActive(true);
     draw();
   }, [canvasDimensions]);
 
@@ -159,13 +159,13 @@ const BreathTimer = () => {
   useEffect(() => {
     if (previousOrientationRef.current !== viewport.orientation && !isInitialLoad) {
       setIsOrientationChanging(true);
-      
+
       const timeoutId = setTimeout(() => {
         setIsOrientationChanging(false);
       }, 500);
 
       previousOrientationRef.current = viewport.orientation;
-      
+
       return () => clearTimeout(timeoutId);
     } else {
       previousOrientationRef.current = viewport.orientation;
@@ -176,10 +176,10 @@ const BreathTimer = () => {
   useEffect(() => {
     // Stop current animation
     stopAnimation();
-    
+
     // Reset cycle detection when canvas dimensions change
     // cycleDetection.resetCycle();
-    
+
     // Small delay to ensure DOM has updated after orientation change
     const timeoutId = setTimeout(() => {
       startAnimation();
@@ -194,7 +194,7 @@ const BreathTimer = () => {
   const applyChanges = () => {
     amplitudeRef.current = tempAmplitude;
     speedRef.current = tempSpeed;
-    
+
     // Reset cycle detection when speed changes to maintain timing accuracy
     // Amplitude changes don't affect cycle timing, only speed does
     // cycleDetection.resetCycle();
@@ -208,11 +208,11 @@ const BreathTimer = () => {
       ></canvas>
 
       <div className="controls-container">
-        {/* <BreathCounter
+        <BreathCounter
           count={breathCounter.count}
           maxCount={21}
           position="controls"
-        /> */}
+        />
 
         <MobileSlider
           label="Amplitude"

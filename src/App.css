@@ -143,6 +143,14 @@
   width: 100%;
 }
 
+/* Apply button container for proper centering */
+.apply-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 /* Controls visibility is now handled by conditional rendering in React */
 
 /* All controls are now centered using flexbox in .controls-container */

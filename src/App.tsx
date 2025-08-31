@@ -18,7 +18,7 @@ const BreathTimer = () => {
   const [tempSpeed, setTempSpeed] = useState(2);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isOrientationChanging, setIsOrientationChanging] = useState(false);
-  const [showControls, setShowControls] = useState(true);
+  const [showControls, setShowControls] = useState(false);
 
   const frequency = 0.01;
 
@@ -244,7 +244,7 @@ const BreathTimer = () => {
               onChange={setTempSpeed}
             />
 
-            <div className="button-wrapper">
+            <div className="apply-button-container">
               <MobileButton
                 onClick={applyChanges}
                 variant="primary"

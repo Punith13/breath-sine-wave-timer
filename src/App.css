@@ -1,8 +1,13 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* Main app container - Mobile-first responsive layout */
@@ -18,6 +23,8 @@
   min-height: 100vh;
   min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100%;
+  max-width: 1200px; /* Constrain maximum width for better centering */
+  margin: 0 auto; /* Center the entire container */
   gap: var(--spacing-lg);
   padding: var(--spacing-md);
   
@@ -32,6 +39,7 @@
 .app-container .breath-counter {
   grid-area: counter;
   width: 100%;
+  max-width: 800px; /* Match canvas max width */
   justify-self: center;
   text-align: center;
 }
@@ -40,9 +48,10 @@
 .app-container canvas {
   grid-area: canvas;
   width: 100%;
-  max-width: var(--canvas-max-width);
+  max-width: 800px; /* Set a consistent max width for centering */
   height: auto;
   border-radius: var(--border-radius);
+  justify-self: center; /* Ensure canvas is centered */
   
   /* Prevent mobile browser behaviors on canvas */
   -webkit-user-select: none;
@@ -67,11 +76,12 @@
 .controls-container {
   grid-area: controls;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px; /* Slightly wider for better balance */
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
   padding: var(--spacing-sm) var(--spacing-md);
+  justify-self: center; /* Center the controls */
   
   /* Ensure controls don't get too close to screen edges */
   margin-left: var(--spacing-sm);
@@ -93,11 +103,15 @@
   .app-container {
     gap: var(--spacing-xl);
     padding: var(--spacing-lg);
-    grid-template-rows: 1fr auto;
+    max-width: 1000px; /* Slightly smaller for tablets */
+  }
+  
+  .app-container canvas {
+    max-width: 700px; /* Responsive canvas size for tablets */
   }
   
   .controls-container {
-    max-width: 500px;
+    max-width: 600px;
     gap: var(--spacing-xl);
     padding: var(--spacing-md) var(--spacing-lg);
     margin-left: var(--spacing-md);
@@ -110,10 +124,15 @@
   .app-container {
     gap: var(--spacing-xxl);
     padding: var(--spacing-xl);
+    max-width: 1200px; /* Full desktop width */
+  }
+  
+  .app-container canvas {
+    max-width: 800px; /* Optimal canvas size for desktop */
   }
   
   .controls-container {
-    max-width: 600px;
+    max-width: 700px;
     gap: var(--spacing-xxl);
   }
 }
@@ -121,8 +140,16 @@
 /* Large desktop adjustments (1280px and up) */
 @media (min-width: 1280px) {
   .app-container {
-    max-width: 1280px;
-    margin: 0 auto;
+    max-width: 1400px; /* Slightly wider for large screens */
+    padding: calc(var(--spacing-xl) * 1.5);
+  }
+  
+  .app-container canvas {
+    max-width: 900px; /* Larger canvas for big screens */
+  }
+  
+  .controls-container {
+    max-width: 800px;
   }
 }
 
@@ -169,6 +196,7 @@
     grid-template-areas: "counter canvas controls";
     gap: var(--spacing-md);
     padding: var(--spacing-sm);
+    max-width: 100vw; /* Full width in landscape */
     
     /* Adjust for landscape safe areas */
     padding-left: max(var(--spacing-sm), var(--safe-area-inset-left));
@@ -185,6 +213,7 @@
     align-self: center;
     width: auto;
     height: auto;
+    max-width: none;
   }
   
   .app-container canvas {
@@ -192,6 +221,7 @@
     height: 100%;
     max-height: calc(100vh - var(--spacing-md));
     max-height: calc(100dvh - var(--spacing-md));
+    max-width: none; /* Allow canvas to be flexible in landscape */
   }
   
   .controls-container {
@@ -213,6 +243,7 @@
     grid-template-rows: 1fr;
     grid-template-areas: "counter canvas controls";
     gap: var(--spacing-lg);
+    max-width: 100vw; /* Full width for tablet landscape */
   }
   
   .app-container .breath-counter {
@@ -223,6 +254,11 @@
     align-self: center;
     width: auto;
     height: auto;
+    max-width: none;
+  }
+  
+  .app-container canvas {
+    max-width: none; /* Allow canvas to be flexible in tablet landscape */
   }
   
   .controls-container {
